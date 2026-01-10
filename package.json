@@ -1,0 +1,23 @@
+{
+  "name": "bridge-bim-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "교량 BIM + Web 플랫폼 토이 프로젝트",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "dev": "npm run dev:api & npm run dev:web",
+    "build": "npm run build --workspaces",
+    "typecheck": "npm run typecheck --workspaces"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
