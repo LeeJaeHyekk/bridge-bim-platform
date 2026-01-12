@@ -1,0 +1,66 @@
+/* Error Component Styles */
+
+.errorMessage {
+  background-color: var(--color-danger-bg);
+  border-left: 4px solid var(--color-danger-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+}
+
+.errorContent {
+  display: flex;
+}
+
+.errorIcon {
+  flex-shrink: 0;
+}
+
+.errorIconText {
+  color: var(--color-danger-primary);
+  font-size: var(--font-size-xl);
+}
+
+.errorText {
+  margin-left: var(--spacing-sm);
+  flex: 1;
+}
+
+.errorMessageText {
+  font-size: var(--font-size-sm);
+  color: var(--color-danger-text);
+}
+
+.errorActions {
+  margin-left: var(--spacing-md);
+}
+
+.retryButton {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-danger-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: var(--transition-color);
+}
+
+.retryButton:hover {
+  color: #991b1b;
+}
+
+/* Error Page */
+.errorPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-md);
+}
+
+.errorPageContent {
+  max-width: 28rem;
+  width: 100%;
+}

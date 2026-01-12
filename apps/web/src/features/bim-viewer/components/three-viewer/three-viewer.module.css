@@ -1,0 +1,22 @@
+/* Three Viewer Component Styles */
+
+/* 캔버스 컨테이너 섹션 */
+.container {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  overflow: hidden;
+}
+
+.container canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  outline: none;
+  object-fit: contain;
+  flex: 1;
+}

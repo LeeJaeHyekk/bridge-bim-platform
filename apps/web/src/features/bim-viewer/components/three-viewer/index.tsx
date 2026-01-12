@@ -4,6 +4,7 @@ import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js
 import type { ThreeViewerProps } from './types'
 import { debugLog } from './utils'
 import { useThreeEngine } from './hooks/use-three-engine'
+import styles from './three-viewer.module.css'
 // TODO: 점진적으로 제거 예정 - ModelManager, InteractionManager로 이동
 import { useModelLoader, useHighlight, useCameraFocus } from './hooks'
 
@@ -329,8 +330,7 @@ export const ThreeViewer = memo(function ThreeViewer({
     return (
       <div 
         ref={containerRef} 
-        className="w-full h-full"
-        style={{ minHeight: '400px' }}
+        className={styles.container}
       />
     )
   }
@@ -354,8 +354,7 @@ export const ThreeViewer = memo(function ThreeViewer({
   return (
     <div 
       ref={containerRef} 
-      className="w-full h-full"
-      style={{ minHeight: '400px' }}
+      className={styles.container}
     />
   )
 }, (prevProps, nextProps) => {

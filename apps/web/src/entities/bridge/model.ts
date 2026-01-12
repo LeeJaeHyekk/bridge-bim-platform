@@ -1,33 +1,63 @@
 import type { Bridge } from '@bridge-bim-platform/shared'
 
-export class BridgeModel {
-  constructor(private bridge: Bridge) {}
+interface BridgeModelState {
+  bridge: Bridge
+}
 
-  get id() {
-    return this.bridge.id
+function createBridgeModel(bridge: Bridge) {
+  const state: BridgeModelState = {
+    bridge,
   }
 
-  get name() {
-    return this.bridge.name
+  function getId() {
+    return state.bridge.id
   }
 
-  get location() {
-    return this.bridge.location
+  function getName() {
+    return state.bridge.name
   }
 
-  get status() {
-    return this.bridge.status
+  function getLocation() {
+    return state.bridge.location
   }
 
-  isSafe() {
-    return this.bridge.status === 'SAFE'
+  function getStatus() {
+    return state.bridge.status
   }
 
-  isWarning() {
-    return this.bridge.status === 'WARNING'
+  function isSafe() {
+    return state.bridge.status === 'SAFE'
   }
 
-  isDanger() {
-    return this.bridge.status === 'DANGER'
+  function isWarning() {
+    return state.bridge.status === 'WARNING'
   }
+
+  function isDanger() {
+    return state.bridge.status === 'DANGER'
+  }
+
+  return {
+    get id() {
+      return getId()
+    },
+    get name() {
+      return getName()
+    },
+    get location() {
+      return getLocation()
+    },
+    get status() {
+      return getStatus()
+    },
+    isSafe,
+    isWarning,
+    isDanger,
+  }
+}
+
+export type BridgeModel = ReturnType<typeof createBridgeModel>
+
+export function createBridgeModelInstance(bridge: Bridge) {
+  return createBridgeModel(bridge)
 }

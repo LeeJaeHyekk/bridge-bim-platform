@@ -1,3 +1,5 @@
+import styles from './error.module.css'
+
 interface ErrorMessageProps {
   message: string
   onRetry?: () => void
@@ -5,19 +7,19 @@ interface ErrorMessageProps {
 
 export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
   return (
-    <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded">
-      <div className="flex">
-        <div className="flex-shrink-0">
-          <span className="text-red-400 text-xl">⚠️</span>
+    <div className={styles.errorMessage}>
+      <div className={styles.errorContent}>
+        <div className={styles.errorIcon}>
+          <span className={styles.errorIconText}>⚠️</span>
         </div>
-        <div className="ml-3 flex-1">
-          <p className="text-sm text-red-700">{message}</p>
+        <div className={styles.errorText}>
+          <p className={styles.errorMessageText}>{message}</p>
         </div>
         {onRetry && (
-          <div className="ml-4">
+          <div className={styles.errorActions}>
             <button
               onClick={onRetry}
-              className="text-sm font-medium text-red-700 hover:text-red-900 underline"
+              className={styles.retryButton}
             >
               다시 시도
             </button>
@@ -30,8 +32,8 @@ export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
 
 export function ErrorPage({ message }: { message: string }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="max-w-md w-full">
+    <div className={styles.errorPage}>
+      <div className={styles.errorPageContent}>
         <ErrorMessage message={message} />
       </div>
     </div>

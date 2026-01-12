@@ -6,46 +6,66 @@ import { debugLog } from '../../utils/debug'
  * OrbitControls 생명주기 관리
  * 단일 책임: Controls 생성 및 설정
  */
-export class ControlsManager {
-  private controls: OrbitControls | null = null
 
-  init(
+interface ControlsManagerState {
+  controls: OrbitControls | null
+}
+
+function createControlsManager() {
+  const state: ControlsManagerState = {
+    controls: null,
+  }
+
+  function init(
     camera: THREE.PerspectiveCamera,
     renderer: THREE.WebGLRenderer,
   ): OrbitControls {
-    if (this.controls) {
+    if (state.controls) {
       debugLog('[ControlsManager] 기존 Controls 재사용')
-      return this.controls
+      return state.controls
     }
 
     debugLog('[ControlsManager] Controls 생성 시작')
 
-    this.controls = new OrbitControls(camera, renderer.domElement)
-    this.controls.enableDamping = true
-    this.controls.dampingFactor = 0.05
-    this.controls.enableZoom = true
-    this.controls.enablePan = true
+    state.controls = new OrbitControls(camera, renderer.domElement)
+    state.controls.enableDamping = true
+    state.controls.dampingFactor = 0.05
+    state.controls.enableZoom = true
+    state.controls.enablePan = true
 
     debugLog('[ControlsManager] Controls 생성 완료')
 
-    return this.controls
+    return state.controls
   }
 
-  getControls(): OrbitControls | null {
-    return this.controls
+  function getControls(): OrbitControls | null {
+    return state.controls
   }
 
-  update(): void {
-    if (this.controls) {
-      this.controls.update()
+  function update(): void {
+    if (state.controls) {
+      state.controls.update()
     }
   }
 
-  dispose(): void {
-    if (!this.controls) return
+  function dispose(): void {
+    if (!state.controls) return
 
     debugLog('[ControlsManager] Controls 정리')
-    this.controls.dispose()
-    this.controls = null
+    state.controls.dispose()
+    state.controls = null
   }
+
+  return {
+    init,
+    getControls,
+    update,
+    dispose,
+  }
+}
+
+export type ControlsManager = ReturnType<typeof createControlsManager>
+
+export function createControlsManagerInstance() {
+  return createControlsManager()
 }

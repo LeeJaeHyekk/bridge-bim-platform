@@ -1,9 +1,9 @@
 import type { Size } from './types'
-import { SceneManager } from './managers/SceneManager'
-import { CameraManager } from './managers/CameraManager'
-import { RendererManager } from './managers/RendererManager'
-import { ControlsManager } from './managers/ControlsManager'
-import { AnimationManager } from './managers/AnimationManager'
+import { createSceneManagerInstance, type SceneManager } from './managers/SceneManager'
+import { createCameraManagerInstance, type CameraManager } from './managers/CameraManager'
+import { createRendererManagerInstance, type RendererManager } from './managers/RendererManager'
+import { createControlsManagerInstance, type ControlsManager } from './managers/ControlsManager'
+import { createAnimationManagerInstance, type AnimationManager } from './managers/AnimationManager'
 import { debugLog } from '../utils/debug'
 
 /**
@@ -14,28 +14,31 @@ import { debugLog } from '../utils/debug'
  * - React: 언제(init / load / focus)를 결정
  * - ThreeEngine: 어떻게(render / resize / animate)를 수행
  */
-export class ThreeEngine {
-  private sceneManager: SceneManager
-  private cameraManager: CameraManager
-  private rendererManager: RendererManager
-  private controlsManager: ControlsManager
-  private animationManager: AnimationManager
 
-  private initialized = false
+interface ThreeEngineState {
+  sceneManager: SceneManager
+  cameraManager: CameraManager
+  rendererManager: RendererManager
+  controlsManager: ControlsManager
+  animationManager: AnimationManager
+  initialized: boolean
+}
 
-  constructor() {
-    this.sceneManager = new SceneManager()
-    this.cameraManager = new CameraManager()
-    this.rendererManager = new RendererManager()
-    this.controlsManager = new ControlsManager()
-    this.animationManager = new AnimationManager()
+function createThreeEngine() {
+  const state: ThreeEngineState = {
+    sceneManager: createSceneManagerInstance(),
+    cameraManager: createCameraManagerInstance(),
+    rendererManager: createRendererManagerInstance(),
+    controlsManager: createControlsManagerInstance(),
+    animationManager: createAnimationManagerInstance(),
+    initialized: false,
   }
 
   /**
    * 엔진 초기화 (한 번만 실행)
    */
-  init(container: HTMLElement, size: Size): void {
-    if (this.initialized) {
+  function init(container: HTMLElement, size: Size): void {
+    if (state.initialized) {
       debugLog('[ThreeEngine] 이미 초기화되었습니다. 스킵합니다.')
       return
     }
@@ -43,21 +46,21 @@ export class ThreeEngine {
     debugLog('[ThreeEngine] 엔진 초기화 시작', { size })
 
     // 1. Scene 초기화
-    const scene = this.sceneManager.init()
+    const scene = state.sceneManager.init()
 
     // 2. Camera 초기화
-    const camera = this.cameraManager.init(size)
+    const camera = state.cameraManager.init(size)
 
     // 3. Renderer 초기화
-    const renderer = this.rendererManager.init(container, size)
+    const renderer = state.rendererManager.init(container, size)
 
     // 4. Controls 초기화
-    const controls = this.controlsManager.init(camera, renderer)
+    const controls = state.controlsManager.init(camera, renderer)
 
     // 5. 애니메이션 루프 시작
-    this.animationManager.start(scene, camera, renderer, controls)
+    state.animationManager.start(scene, camera, renderer, controls)
 
-    this.initialized = true
+    state.initialized = true
 
     debugLog('[ThreeEngine] 엔진 초기화 완료', {
       hasScene: !!scene,
@@ -70,58 +73,75 @@ export class ThreeEngine {
   /**
    * 리사이즈 처리
    */
-  resize(size: Size): void {
-    if (!this.initialized) {
+  function resize(size: Size): void {
+    if (!state.initialized) {
       debugLog('[ThreeEngine] 아직 초기화되지 않았습니다. resize 스킵')
       return
     }
 
     debugLog('[ThreeEngine] 리사이즈', { size })
-    this.cameraManager.resize(size)
-    this.rendererManager.resize(size)
+    state.cameraManager.resize(size)
+    state.rendererManager.resize(size)
   }
 
   /**
    * 엔진 정리
    */
-  destroy(): void {
-    if (!this.initialized) {
+  function destroy(): void {
+    if (!state.initialized) {
       debugLog('[ThreeEngine] 아직 초기화되지 않았습니다. destroy 스킵')
       return
     }
 
     debugLog('[ThreeEngine] 엔진 정리 시작')
 
-    this.animationManager.stop()
-    this.controlsManager.dispose()
-    this.rendererManager.dispose()
-    this.cameraManager.dispose()
+    state.animationManager.stop()
+    state.controlsManager.dispose()
+    state.rendererManager.dispose()
+    state.cameraManager.dispose()
     // Scene은 메시가 있을 수 있으므로 선택적으로 정리
-    // this.sceneManager.dispose()
+    // state.sceneManager.dispose()
 
-    this.initialized = false
+    state.initialized = false
 
     debugLog('[ThreeEngine] 엔진 정리 완료')
   }
 
   // Getters for managers (향후 확장용)
-  getScene() {
-    return this.sceneManager.getScene()
+  function getScene() {
+    return state.sceneManager.getScene()
   }
 
-  getCamera() {
-    return this.cameraManager.getCamera()
+  function getCamera() {
+    return state.cameraManager.getCamera()
   }
 
-  getRenderer() {
-    return this.rendererManager.getRenderer()
+  function getRenderer() {
+    return state.rendererManager.getRenderer()
   }
 
-  getControls() {
-    return this.controlsManager.getControls()
+  function getControls() {
+    return state.controlsManager.getControls()
   }
 
-  isInitialized(): boolean {
-    return this.initialized
+  function isInitialized(): boolean {
+    return state.initialized
   }
+
+  return {
+    init,
+    resize,
+    destroy,
+    getScene,
+    getCamera,
+    getRenderer,
+    getControls,
+    isInitialized,
+  }
+}
+
+export type ThreeEngine = ReturnType<typeof createThreeEngine>
+
+export function createThreeEngineInstance() {
+  return createThreeEngine()
 }

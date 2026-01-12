@@ -1,0 +1,93 @@
+/* BIM Filter Component Styles */
+
+.container {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.title {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+}
+
+.resetButton {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: var(--transition-color);
+}
+
+.resetButton:hover {
+  color: var(--color-primary-hover);
+}
+
+.section {
+  margin-bottom: var(--spacing-md);
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text-primary);
+}
+
+.buttonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.filterButton {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+
+.filterButtonInactive {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+}
+
+.filterButtonInactive:hover {
+  background-color: var(--color-border-hover);
+}
+
+.filterButtonActive {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.filterButtonSafe {
+  background-color: var(--color-safe-primary);
+  color: white;
+}
+
+.filterButtonWarning {
+  background-color: var(--color-warning-primary);
+  color: white;
+}
+
+.filterButtonDanger {
+  background-color: var(--color-danger-primary);
+  color: white;
+}

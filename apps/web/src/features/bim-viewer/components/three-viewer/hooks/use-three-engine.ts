@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react'
-import { ThreeEngine, type Size } from '../engine'
+import { createThreeEngineInstance, type ThreeEngine, type Size } from '../engine'
 import { debugLog } from '../utils/debug'
 
 /**
@@ -19,7 +19,7 @@ export function useThreeEngine(
   // 엔진 인스턴스가 없으면 생성
   if (!engineRef.current) {
     debugLog('[useThreeEngine] ThreeEngine 인스턴스 생성')
-    engineRef.current = new ThreeEngine()
+    engineRef.current = createThreeEngineInstance()
   }
 
   // 엔진 초기화 및 리사이즈

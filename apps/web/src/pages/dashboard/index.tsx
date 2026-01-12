@@ -19,12 +19,12 @@ export function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center h-64">
-            <div className="text-center">
+      <div className={styles.loadingContainer}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.loadingContent}>
+            <div className={styles.loadingText}>
               <LoadingSpinner size="lg" />
-              <p className="mt-4 text-gray-500">데이터를 불러오는 중...</p>
+              <p className={styles.loadingMessage}>데이터를 불러오는 중...</p>
             </div>
           </div>
         </div>
@@ -34,8 +34,8 @@ export function DashboardPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen p-8">
-        <div className="max-w-7xl mx-auto">
+      <div className={styles.errorContainer}>
+        <div className={styles.contentWrapper}>
           <ErrorMessage message={`데이터를 불러올 수 없습니다: ${error.message}`} />
         </div>
       </div>

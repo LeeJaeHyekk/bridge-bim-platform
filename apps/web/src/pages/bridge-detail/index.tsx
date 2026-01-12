@@ -5,6 +5,8 @@ import { useState, useMemo } from 'react'
 import { useBIMModel } from '@/features/bim-viewer/hooks'
 import type { BridgeStatus } from '@bridge-bim-platform/shared'
 import { LoadingSpinner, ErrorMessage } from '@/shared/ui'
+import styles from './bridge-detail.module.css'
+import { clsx } from 'clsx'
 
 export function BridgeDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -50,12 +52,12 @@ export function BridgeDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-4 sm:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center h-64">
-            <div className="text-center">
+      <div className={styles.loadingContainer}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.loadingContent}>
+            <div className={styles.loadingText}>
               <LoadingSpinner size="lg" />
-              <p className="mt-4 text-gray-500">교량 정보를 불러오는 중...</p>
+              <p className={styles.loadingMessage}>교량 정보를 불러오는 중...</p>
             </div>
           </div>
         </div>
@@ -65,8 +67,8 @@ export function BridgeDetailPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen p-4 sm:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto">
+      <div className={styles.errorContainer}>
+        <div className={styles.contentWrapper}>
           <ErrorMessage message={`교량 정보를 불러올 수 없습니다: ${error.message}`} />
         </div>
       </div>
@@ -75,33 +77,27 @@ export function BridgeDetailPage() {
 
   if (!bridge) {
     return (
-      <div className="min-h-screen p-4 sm:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
-            <p className="text-yellow-800 font-medium">교량을 찾을 수 없습니다.</p>
+      <div className={styles.errorContainer}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.notFoundAlert}>
+            <p className={styles.notFoundMessage}>교량을 찾을 수 없습니다.</p>
           </div>
         </div>
       </div>
     )
   }
 
-  const statusConfig: Record<BridgeStatus, { bg: string; text: string; border: string; label: string }> = {
+  const statusConfig: Record<BridgeStatus, { className: string; label: string }> = {
     SAFE: {
-      bg: 'bg-green-100',
-      text: 'text-green-800',
-      border: 'border-green-300',
+      className: styles.statusSafe,
       label: '안전',
     },
     WARNING: {
-      bg: 'bg-yellow-100',
-      text: 'text-yellow-800',
-      border: 'border-yellow-300',
+      className: styles.statusWarning,
       label: '주의',
     },
     DANGER: {
-      bg: 'bg-red-100',
-      text: 'text-red-800',
-      border: 'border-red-300',
+      className: styles.statusDanger,
       label: '위험',
     },
   }
@@ -109,28 +105,26 @@ export function BridgeDetailPage() {
   const config = statusConfig[bridge.status as BridgeStatus]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className={styles.page}>
       {/* 헤더 */}
-      <div className="bg-white border-b-2 border-gray-200 shadow-md">
-        <div className="max-w-7xl mx-auto p-6 sm:p-8">
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
           <Link
             to="/bridges"
-            className="inline-flex items-center text-blue-700 hover:text-blue-800 mb-6 transition-colors font-semibold text-lg"
+            className={styles.backLink}
           >
-            <span className="mr-2 text-xl">←</span>
+            <span className={styles.backIcon}>←</span>
             교량 목록으로 돌아가기
           </Link>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 leading-tight">{bridge.name}</h1>
-              <p className="text-gray-700 text-lg flex items-center font-medium">
-                <span className="mr-2 text-xl">📍</span>
+          <div className={styles.headerMain}>
+            <div className={styles.headerInfo}>
+              <h1 className={styles.title}>{bridge.name}</h1>
+              <p className={styles.location}>
+                <span className={styles.locationIcon}>📍</span>
                 {bridge.location}
               </p>
             </div>
-            <span
-              className={`px-6 py-3 rounded-xl text-base font-bold border-2 self-start sm:self-auto ${config.bg} ${config.text} ${config.border}`}
-            >
+            <span className={clsx(styles.statusBadge, config.className)}>
               {config.label}
             </span>
           </div>
@@ -138,11 +132,11 @@ export function BridgeDetailPage() {
       </div>
 
       {/* 메인 컨텐츠 */}
-      <div className="max-w-7xl mx-auto p-6 sm:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className={styles.mainContent}>
+        <div className={styles.contentGrid}>
           {/* BIM Viewer */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden h-[600px] border-2 border-gray-100 flex flex-col">
+          <div>
+            <div className={styles.viewerContainer}>
               {id && (
                 <BIMViewer
                   bridgeId={id}
@@ -154,8 +148,8 @@ export function BridgeDetailPage() {
           </div>
 
           {/* 속성 패널 */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl shadow-xl h-[600px] overflow-y-auto border-2 border-gray-100">
+          <div>
+            <div className={styles.propertiesContainer}>
               <BIMProperties component={selectedComponent} />
             </div>
           </div>

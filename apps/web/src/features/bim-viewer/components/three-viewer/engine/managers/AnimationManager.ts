@@ -6,32 +6,40 @@ import { debugLog } from '../../utils/debug'
  * 애니메이션 루프 관리
  * 단일 책임: requestAnimationFrame 루프 시작/중지
  */
-export class AnimationManager {
-  private animationFrameId: number | null = null
-  private isRunning = false
 
-  start(
+interface AnimationManagerState {
+  animationFrameId: number | null
+  isRunning: boolean
+}
+
+function createAnimationManager() {
+  const state: AnimationManagerState = {
+    animationFrameId: null,
+    isRunning: false,
+  }
+
+  function start(
     scene: THREE.Scene,
     camera: THREE.PerspectiveCamera,
     renderer: THREE.WebGLRenderer,
     controls: OrbitControls,
   ): void {
-    if (this.isRunning) {
+    if (state.isRunning) {
       debugLog('[AnimationManager] 애니메이션 루프는 이미 실행 중입니다.')
       return
     }
 
     debugLog('[AnimationManager] 애니메이션 루프 시작')
-    this.isRunning = true
+    state.isRunning = true
 
     let frameCount = 0
     const animate = () => {
-      if (!this.isRunning) {
+      if (!state.isRunning) {
         debugLog('[AnimationManager] 애니메이션 루프 중단')
         return
       }
 
-      this.animationFrameId = requestAnimationFrame(animate)
+      state.animationFrameId = requestAnimationFrame(animate)
       controls.update()
       renderer.render(scene, camera)
 
@@ -52,19 +60,31 @@ export class AnimationManager {
     animate()
   }
 
-  stop(): void {
-    if (!this.isRunning) return
+  function stop(): void {
+    if (!state.isRunning) return
 
     debugLog('[AnimationManager] 애니메이션 루프 중지')
-    this.isRunning = false
+    state.isRunning = false
 
-    if (this.animationFrameId !== null) {
-      cancelAnimationFrame(this.animationFrameId)
-      this.animationFrameId = null
+    if (state.animationFrameId !== null) {
+      cancelAnimationFrame(state.animationFrameId)
+      state.animationFrameId = null
     }
   }
 
-  isActive(): boolean {
-    return this.isRunning
+  function isActive(): boolean {
+    return state.isRunning
   }
+
+  return {
+    start,
+    stop,
+    isActive,
+  }
+}
+
+export type AnimationManager = ReturnType<typeof createAnimationManager>
+
+export function createAnimationManagerInstance() {
+  return createAnimationManager()
 }

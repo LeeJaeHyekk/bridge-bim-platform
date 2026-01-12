@@ -1,0 +1,224 @@
+/* Bridge Detail Page Styles */
+
+.page {
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+}
+
+.loadingContainer,
+.errorContainer {
+  min-height: 100vh;
+  padding: var(--spacing-md);
+}
+
+@media (min-width: 640px) {
+  .loadingContainer,
+  .errorContainer {
+    padding: var(--spacing-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .loadingContainer,
+  .errorContainer {
+    padding: var(--spacing-xl);
+  }
+}
+
+.contentWrapper {
+  max-width: var(--max-width-container);
+  margin: 0 auto;
+}
+
+.loadingContent,
+.errorContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 16rem;
+}
+
+.loadingText,
+.errorText {
+  text-align: center;
+}
+
+.loadingMessage {
+  margin-top: var(--spacing-md);
+  color: var(--color-text-muted);
+}
+
+.notFoundAlert {
+  background-color: #fef9c3;
+  border-left: 4px solid #fde047;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+}
+
+.notFoundMessage {
+  color: #854d0e;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Header */
+.header {
+  background-color: var(--color-bg-primary);
+  border-bottom: 2px solid var(--color-border-default);
+  box-shadow: var(--shadow-md);
+}
+
+.headerContent {
+  max-width: var(--max-width-container);
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+}
+
+@media (min-width: 640px) {
+  .headerContent {
+    padding: var(--spacing-xl);
+  }
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-lg);
+  transition: var(--transition-color);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+  text-decoration: none;
+}
+
+.backLink:hover {
+  color: var(--color-primary-hover);
+}
+
+.backIcon {
+  margin-right: var(--spacing-xs);
+  font-size: var(--font-size-xl);
+}
+
+.headerMain {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+@media (min-width: 640px) {
+  .headerMain {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.headerInfo {
+  flex: 1;
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+  .title {
+    font-size: var(--font-size-4xl);
+  }
+}
+
+.location {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+  display: flex;
+  align-items: center;
+  font-weight: var(--font-weight-medium);
+}
+
+.locationIcon {
+  margin-right: var(--spacing-xs);
+  font-size: var(--font-size-xl);
+}
+
+.statusBadge {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  border: 2px solid;
+  align-self: flex-start;
+}
+
+@media (min-width: 640px) {
+  .statusBadge {
+    align-self: auto;
+  }
+}
+
+.statusSafe {
+  background-color: var(--color-safe-bg);
+  color: var(--color-safe-text);
+  border-color: var(--color-safe-border);
+}
+
+.statusWarning {
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning-text);
+  border-color: var(--color-warning-border);
+}
+
+.statusDanger {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger-text);
+  border-color: var(--color-danger-border);
+}
+
+/* Main Content */
+.mainContent {
+  max-width: var(--max-width-container);
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+}
+
+@media (min-width: 640px) {
+  .mainContent {
+    padding: var(--spacing-xl);
+  }
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-2xl);
+}
+
+@media (min-width: 1024px) {
+  .contentGrid {
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-3xl);
+  }
+}
+
+.viewerContainer {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  min-height: 600px;
+  border: 2px solid var(--color-border-light);
+  display: flex;
+  flex-direction: column;
+}
+
+.propertiesContainer {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  min-height: 600px;
+  overflow-y: auto;
+  border: 2px solid var(--color-border-light);
+}

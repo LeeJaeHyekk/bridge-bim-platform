@@ -3,6 +3,7 @@ import { useBIMModel } from '../hooks'
 import type { BIMComponent } from '@bridge-bim-platform/shared'
 import { ThreeViewer } from './three-viewer/index'
 import styles from '@/shared/styles/bim-viewer.module.css'
+import loadingStyles from './bim-viewer-loading.module.css'
 import { clsx } from 'clsx'
 
 // 개발 환경에서만 로그 출력
@@ -143,10 +144,10 @@ export const BIMViewer = memo(function BIMViewer({
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full bg-gray-50">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">BIM 모델을 불러오는 중...</p>
+      <div className={loadingStyles.loadingContainer}>
+        <div className={loadingStyles.loadingContent}>
+          <div className={loadingStyles.loadingSpinner} />
+          <p className={loadingStyles.loadingMessage}>BIM 모델을 불러오는 중...</p>
         </div>
       </div>
     )
@@ -154,11 +155,11 @@ export const BIMViewer = memo(function BIMViewer({
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-full bg-red-50">
-        <div className="text-center p-6">
-          <span className="text-4xl mb-4 block">⚠️</span>
-          <p className="text-red-700 font-medium">오류가 발생했습니다</p>
-          <p className="text-red-600 text-sm mt-2">{error.message}</p>
+      <div className={loadingStyles.errorContainer}>
+        <div className={loadingStyles.errorContent}>
+          <span className={loadingStyles.errorIcon}>⚠️</span>
+          <p className={loadingStyles.errorTitle}>오류가 발생했습니다</p>
+          <p className={loadingStyles.errorMessage}>{error.message}</p>
         </div>
       </div>
     )
@@ -166,11 +167,11 @@ export const BIMViewer = memo(function BIMViewer({
 
   if (!model) {
     return (
-      <div className="flex items-center justify-center h-full bg-gray-50">
-        <div className="text-center p-6">
-          <span className="text-4xl mb-4 block">📦</span>
-          <p className="text-gray-700 font-medium">BIM 모델이 없습니다</p>
-          <p className="text-gray-500 text-sm mt-2">이 교량에 대한 BIM 모델이 등록되지 않았습니다.</p>
+      <div className={loadingStyles.emptyContainer}>
+        <div className={loadingStyles.emptyContent}>
+          <span className={loadingStyles.emptyIcon}>📦</span>
+          <p className={loadingStyles.emptyTitle}>BIM 모델이 없습니다</p>
+          <p className={loadingStyles.emptySubtitle}>이 교량에 대한 BIM 모델이 등록되지 않았습니다.</p>
         </div>
       </div>
     )
@@ -206,10 +207,10 @@ export const BIMViewer = memo(function BIMViewer({
             onComponentClick={handleComponentClick}
           />
         ) : (
-          <div className="flex items-center justify-center h-full bg-gray-50">
-            <div className="text-center">
-              <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-gray-600">BIM 모델을 불러오는 중...</p>
+          <div className={loadingStyles.loadingContainer}>
+            <div className={loadingStyles.loadingContent}>
+              <div className={loadingStyles.loadingSpinner} />
+              <p className={loadingStyles.loadingMessage}>BIM 모델을 불러오는 중...</p>
             </div>
           </div>
         )}
@@ -294,7 +295,6 @@ const ComponentListItem = memo(function ComponentListItem({
         styles.componentItem,
         isSelected ? styles.componentItemSelected : styles.componentItemDefault,
       )}
-      style={{ cursor: 'pointer' }}
     >
       <div className={styles.componentItemContent}>
         <span className={styles.componentName}>{component.name}</span>

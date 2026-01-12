@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import type { BIMFilter, BIMComponentType } from '@bridge-bim-platform/shared'
 import { BIMComponentTypeEnum } from '@bridge-bim-platform/shared'
+import styles from './bim-filter.module.css'
+import { clsx } from 'clsx'
 
 interface BIMFilterProps {
   onFilterChange: (filter: BIMFilter) => void
@@ -53,30 +55,31 @@ export function BIMFilter({ onFilterChange }: BIMFilterProps) {
   }
 
   return (
-    <div className="p-4 border-b space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="font-semibold">필터</h3>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h3 className={styles.title}>필터</h3>
         <button
           onClick={resetFilter}
-          className="text-sm text-blue-600 hover:text-blue-800"
+          className={styles.resetButton}
         >
           초기화
         </button>
       </div>
 
       {/* 부재 타입 필터 */}
-      <div>
-        <label className="block text-sm font-medium mb-2">부재 타입</label>
-        <div className="flex flex-wrap gap-2">
+      <div className={styles.section}>
+        <label className={styles.label}>부재 타입</label>
+        <div className={styles.buttonGroup}>
           {Object.values(BIMComponentTypeEnum).map((type) => (
             <button
               key={type}
               onClick={() => handleTypeToggle(type)}
-              className={`px-3 py-1 rounded text-sm ${
+              className={clsx(
+                styles.filterButton,
                 selectedTypes.includes(type)
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+                  ? styles.filterButtonActive
+                  : styles.filterButtonInactive
+              )}
             >
               {type}
             </button>
@@ -85,22 +88,23 @@ export function BIMFilter({ onFilterChange }: BIMFilterProps) {
       </div>
 
       {/* 상태 필터 */}
-      <div>
-        <label className="block text-sm font-medium mb-2">상태</label>
-        <div className="flex flex-wrap gap-2">
+      <div className={styles.section}>
+        <label className={styles.label}>상태</label>
+        <div className={styles.buttonGroup}>
           {(['SAFE', 'WARNING', 'DANGER'] as const).map((status) => (
             <button
               key={status}
               onClick={() => handleStatusToggle(status)}
-              className={`px-3 py-1 rounded text-sm ${
+              className={clsx(
+                styles.filterButton,
                 selectedStatuses.includes(status)
                   ? status === 'SAFE'
-                    ? 'bg-green-500 text-white'
+                    ? styles.filterButtonSafe
                     : status === 'WARNING'
-                      ? 'bg-yellow-500 text-white'
-                      : 'bg-red-500 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+                      ? styles.filterButtonWarning
+                      : styles.filterButtonDanger
+                  : styles.filterButtonInactive
+              )}
             >
               {status}
             </button>

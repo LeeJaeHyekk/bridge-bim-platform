@@ -542,3 +542,33 @@
 .actionButtonSuccess:hover {
   background-color: var(--color-success-hover);
 }
+
+/* Loading/Error States */
+.loadingContainer,
+.errorContainer {
+  min-height: 100vh;
+  padding: var(--spacing-xl);
+}
+
+.contentWrapper {
+  max-width: var(--max-width-container);
+  margin: 0 auto;
+}
+
+.loadingContent,
+.errorContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 16rem;
+}
+
+.loadingText,
+.errorText {
+  text-align: center;
+}
+
+.loadingMessage {
+  margin-top: var(--spacing-md);
+  color: var(--color-text-muted);
+}
