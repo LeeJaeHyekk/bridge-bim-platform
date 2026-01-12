@@ -1,7 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { bridgeRoute } from './modules/bridge/bridge.route'
-import { bimRoute } from './modules/bim/bim.route'
+import { bridgeRoute, bimRoute } from './modules'
 import { errorHandler } from './common/error/error-handler'
 
 export const app = express()

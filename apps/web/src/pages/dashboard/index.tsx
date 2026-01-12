@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useBridges } from '@/features/bridge/hooks'
 import { BridgeCard } from '@/features/bridge/components'
 import { LoadingSpinner, ErrorMessage } from '@/shared/ui'
+import type { Bridge } from '@bridge-bim-platform/shared'
 import styles from './dashboard.module.css'
 import { clsx } from 'clsx'
 
@@ -125,7 +126,7 @@ export function DashboardPage() {
               </div>
             ) : (
               <div className={styles.bridgeGrid}>
-                {bridges.slice(0, 6).map((bridge) => (
+                {bridges.slice(0, 6).map((bridge: Bridge) => (
                   <Link
                     key={bridge.id}
                     to={`/bridges/${bridge.id}`}

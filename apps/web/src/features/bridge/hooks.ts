@@ -1,53 +1,45 @@
-import { useState, useEffect } from 'react'
-import { fetchBridges, fetchBridgeById } from './api'
+import { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '@/app/hooks'
+import { loadBridges, loadBridgeById } from './bridgeSlice'
+import { getErrorFromAsyncState } from '@/shared/redux'
 import type { Bridge } from '@bridge-bim-platform/shared'
 
-export function useBridges() {
-  const [bridges, setBridges] = useState<Bridge[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+export function useBridges(): {
+  bridges: Bridge[]
+  loading: boolean
+  error: Error | null
+} {
+  const dispatch = useAppDispatch()
+  const bridgesAsync = useAppSelector((state) => state.bridge.bridges)
 
   useEffect(() => {
-    async function loadBridges() {
-      try {
-        setLoading(true)
-        const data = await fetchBridges()
-        setBridges(data)
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Unknown error'))
-      } finally {
-        setLoading(false)
-      }
-    }
+    dispatch(loadBridges())
+  }, [dispatch])
 
-    loadBridges()
-  }, [])
-
-  return { bridges, loading, error }
+  return {
+    bridges: (bridgesAsync.data || []) as Bridge[],
+    loading: bridgesAsync.loading,
+    error: getErrorFromAsyncState(bridgesAsync),
+  }
 }
 
-export function useBridge(id: string) {
-  const [bridge, setBridge] = useState<Bridge | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+export function useBridge(id: string): {
+  bridge: Bridge | null
+  loading: boolean
+  error: Error | null
+} {
+  const dispatch = useAppDispatch()
+  const currentBridgeAsync = useAppSelector((state) => state.bridge.currentBridge)
 
   useEffect(() => {
-    async function loadBridge() {
-      try {
-        setLoading(true)
-        const data = await fetchBridgeById(id)
-        setBridge(data)
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Unknown error'))
-      } finally {
-        setLoading(false)
-      }
-    }
-
     if (id) {
-      loadBridge()
+      dispatch(loadBridgeById(id))
     }
-  }, [id])
+  }, [dispatch, id])
 
-  return { bridge, loading, error }
+  return {
+    bridge: currentBridgeAsync.data ?? null,
+    loading: currentBridgeAsync.loading,
+    error: getErrorFromAsyncState(currentBridgeAsync),
+  }
 }

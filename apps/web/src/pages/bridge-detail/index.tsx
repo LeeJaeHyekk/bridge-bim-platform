@@ -1,15 +1,52 @@
 import { useParams, Link } from 'react-router-dom'
 import { useBridge } from '@/features/bridge/hooks'
 import { BIMViewer, BIMProperties } from '@/features/bim-viewer'
-import { useState } from 'react'
-import type { BIMComponent } from '@bridge-bim-platform/shared'
+import { useState, useMemo } from 'react'
+import { useBIMModel } from '@/features/bim-viewer/hooks'
+import type { BridgeStatus } from '@bridge-bim-platform/shared'
 import { LoadingSpinner, ErrorMessage } from '@/shared/ui'
 
 export function BridgeDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { bridge, loading, error } = useBridge(id || '')
-  const [selectedComponent, setSelectedComponent] =
-    useState<BIMComponent | null>(null)
+  
+  // selectionState: 선택 상태는 string | null만 사용 (객체 금지)
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null)
+  
+  // dataState: BIM 모델 데이터 (불변)
+  const { model } = useBIMModel(id || '')
+  
+  // 선택된 부재 객체는 computed (dataState + selectionState 결합)
+  const selectedComponent = useMemo(() => {
+    if (!model || !selectedComponentId) return null
+    return model.components.find(c => c.id === selectedComponentId) ?? null
+  }, [model, selectedComponentId])
+
+  // 부재 선택 핸들러: componentId (string)만 받음
+  const handleComponentSelect = (componentId: string) => {
+    // 엄격한 검증: componentId가 유효한 string인지 확인
+    if (typeof componentId !== 'string' || componentId.length === 0) {
+      console.warn('[BridgeDetailPage] ⚠️ 잘못된 componentId가 전달되었습니다:', {
+        componentId,
+        componentIdType: typeof componentId,
+      })
+      return
+    }
+    
+    const prevId = selectedComponentId
+    console.log('[BridgeDetailPage] ✅ 부재 선택 핸들러 호출:', {
+      componentId,
+      prevId,
+      componentName: selectedComponent?.name,
+    })
+    
+    try {
+      setSelectedComponentId(componentId)
+      console.log('[BridgeDetailPage] ✅ selectionState 업데이트 완료:', componentId)
+    } catch (error) {
+      console.error('[BridgeDetailPage] ❌ 상태 업데이트 중 오류:', error)
+    }
+  }
 
   if (loading) {
     return (
@@ -48,7 +85,7 @@ export function BridgeDetailPage() {
     )
   }
 
-  const statusConfig = {
+  const statusConfig: Record<BridgeStatus, { bg: string; text: string; border: string; label: string }> = {
     SAFE: {
       bg: 'bg-green-100',
       text: 'text-green-800',
@@ -69,7 +106,7 @@ export function BridgeDetailPage() {
     },
   }
 
-  const config = statusConfig[bridge.status]
+  const config = statusConfig[bridge.status as BridgeStatus]
 
   return (
     <div className="min-h-screen bg-white">
@@ -105,12 +142,12 @@ export function BridgeDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* BIM Viewer */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden h-[600px] border-2 border-gray-100">
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden h-[600px] border-2 border-gray-100 flex flex-col">
               {id && (
                 <BIMViewer
                   bridgeId={id}
-                  selectedComponent={selectedComponent}
-                  onComponentSelect={setSelectedComponent}
+                  selectedComponentId={selectedComponentId}
+                  onComponentSelect={handleComponentSelect}
                 />
               )}
             </div>

@@ -1,4 +1,4 @@
-import { BridgeStatus } from '../enums/bridge-status'
+import type { BridgeStatus } from '../enums/bridge-status'
 
 export interface Bridge {
   id: string

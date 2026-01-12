@@ -1,4 +1,6 @@
 export { BIMViewer } from './bim-viewer'
+export type { BIMViewerProps, SelectionState } from './bim-viewer'
 export { BIMFilter } from './bim-filter'
 export { BIMProperties } from './bim-properties'
-export { ThreeViewer } from './three-viewer'
+export { ThreeViewer } from './three-viewer/index'
+export type { ThreeViewerProps } from './three-viewer/types'

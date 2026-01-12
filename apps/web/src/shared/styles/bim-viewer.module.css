@@ -46,6 +46,8 @@
   background-color: var(--color-bg-dark);
   position: relative;
   min-height: 0;
+  overflow: hidden;
+  width: 100%;
 }
 
 .componentList {
