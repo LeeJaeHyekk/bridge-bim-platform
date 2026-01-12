@@ -5,6 +5,57 @@ import { calculateBoundingBox } from './bounding-box'
 import { debugLog } from './debug'
 
 /**
+ * 화면 기준 거리 계산 (공통 함수)
+ * 카메라 FOV와 화면 비율을 고려하여 객체가 화면에 적절한 크기로 보이도록 거리 계산
+ */
+function calculateScreenBasedDistance(
+  camera: THREE.PerspectiveCamera,
+  size: THREE.Vector3,
+  screenFillRatio: number = 0.8,
+): number {
+  const fov = camera.fov * (Math.PI / 180) // FOV를 라디안으로 변환
+  const aspect = camera.aspect // 화면 비율 (width / height)
+  
+  // 바운딩 박스의 크기 (카메라 방향에 따른 투영 고려)
+  const horizontalSize = Math.max(size.x, size.z) // 수평면에서의 최대 크기
+  const verticalSize = size.y // 수직 크기
+  
+  // 수직 기준 거리 계산
+  const verticalDistance = (verticalSize / 2) / (Math.tan(fov / 2) * screenFillRatio)
+  
+  // 수평 기준 거리 계산
+  const horizontalDistance = (horizontalSize / 2) / (Math.tan(fov / 2) * aspect * screenFillRatio)
+  
+  // 더 큰 쪽을 기준으로 거리 결정 (모든 부분이 화면에 들어오도록)
+  const baseDistance = Math.max(verticalDistance, horizontalDistance)
+  
+  // 최소 거리 보장 (너무 가까이 가지 않도록)
+  const maxSize = Math.max(size.x, size.y, size.z)
+  const minDistance = maxSize * 0.5
+  
+  return Math.max(baseDistance, minDistance)
+}
+
+/**
+ * 카메라 위치 계산 (공통 함수)
+ * 거리와 중심점을 기반으로 카메라 위치와 높이 오프셋 계산
+ */
+function calculateCameraPosition(
+  center: THREE.Vector3,
+  distance: number,
+  angle: number = Math.PI / 4,
+  heightOffsetRatio: number = 0.3,
+): THREE.Vector3 {
+  const heightOffset = distance * heightOffsetRatio
+  
+  return new THREE.Vector3(
+    center.x + distance * Math.cos(angle),
+    center.y + heightOffset,
+    center.z + distance * Math.sin(angle),
+  )
+}
+
+/**
  * 전체 모델의 바운딩 박스를 기준으로 카메라 포커스
  */
 export function focusCameraToScene(
@@ -54,52 +105,15 @@ export function focusCameraToScene(
     bbox.max[2] - bbox.min[2],
   )
 
-  // 🔥 개선: 화면 기준 거리 계산 (FOV + 화면 비율 고려)
-  // 기존 방식: 객체의 절대 크기(maxSize) 기준 → 수평으로 긴 객체에서 과도하게 멀어짐
-  // 개선 방식: 현재 카메라 시야(FOV) + 화면 비율 기준으로 "화면 안에 자연스럽게 들어오는 거리" 산정
-  
-  const fov = camera.fov * (Math.PI / 180) // FOV를 라디안으로 변환
-  const aspect = camera.aspect // 화면 비율 (width / height)
-  
-  // 바운딩 박스의 크기 (카메라 방향에 따른 투영 고려)
-  // 카메라가 45도 각도에서 보므로, 수평/수직 크기를 모두 고려
-  const horizontalSize = Math.max(size.x, size.z) // 수평면에서의 최대 크기
-  const verticalSize = size.y // 수직 크기
-  
-  // 화면에서 보이는 범위 계산 (world units)
-  // 수직 시야 높이 = 2 * distance * tan(FOV / 2)
-  // 수평 시야 너비 = 수직 시야 높이 * aspect
-  
-  // 바운딩 박스가 화면의 80% 정도를 차지하도록 거리 계산
-  // 화면 비율을 고려하여 수평/수직 중 더 큰 쪽을 기준으로 함
+  // 🔥 개선: 화면 기준 거리 계산 (공통 함수 사용)
   const screenFillRatio = 0.8 // 화면의 80%를 차지
-  
-  // 수직 기준 거리 계산
-  const verticalDistance = (verticalSize / 2) / (Math.tan(fov / 2) * screenFillRatio)
-  
-  // 수평 기준 거리 계산
-  const horizontalDistance = (horizontalSize / 2) / (Math.tan(fov / 2) * aspect * screenFillRatio)
-  
-  // 더 큰 쪽을 기준으로 거리 결정 (모든 부분이 화면에 들어오도록)
-  const baseDistance = Math.max(verticalDistance, horizontalDistance)
-  
-  // 최소 거리 보장 (너무 가까이 가지 않도록)
-  const maxSize = Math.max(size.x, size.y, size.z)
-  const minDistance = maxSize * 0.5
-  const distance = Math.max(baseDistance, minDistance)
+  const distance = calculateScreenBasedDistance(camera, size, screenFillRatio)
   
   // 카메라 각도 (45도 isometric view)
   const angle = Math.PI / 4
   
-  // 높이 오프셋: 객체 위에서 약간 내려다보는 시점
-  // 거리에 비례하여 조정 (거리가 멀수록 높이 오프셋도 증가)
-  const heightOffset = distance * 0.3
-  
-  const newCameraPosition = {
-    x: center.x + distance * Math.cos(angle),
-    y: center.y + heightOffset,
-    z: center.z + distance * Math.sin(angle),
-  }
+  // 카메라 위치 계산 (공통 함수 사용)
+  const newCameraPosition = calculateCameraPosition(center, distance, angle)
 
   debugLog(`[CameraFocus:Scene] 📐 카메라 포커스 계산 (화면 기준)`, {
     center: {
@@ -112,13 +126,8 @@ export function focusCameraToScene(
       y: size.y.toFixed(1),
       z: size.z.toFixed(1),
     },
-    horizontalSize: horizontalSize.toFixed(1),
-    verticalSize: verticalSize.toFixed(1),
     cameraFov: camera.fov,
-    cameraAspect: aspect.toFixed(2),
-    verticalDistance: verticalDistance.toFixed(1),
-    horizontalDistance: horizontalDistance.toFixed(1),
-    baseDistance: baseDistance.toFixed(1),
+    cameraAspect: camera.aspect.toFixed(2),
     finalDistance: distance.toFixed(1),
     screenFillRatio,
     newPosition: {
@@ -185,45 +194,15 @@ export function focusCameraToComponent(
   const size = new THREE.Vector3()
   box.getSize(size)
   
-  // 🔥 개선: 화면 기준 거리 계산 (FOV + 화면 비율 고려)
-  // 기존 방식: 객체의 절대 크기(maxSize) 기준 → 수평으로 긴 객체에서 과도하게 멀어짐
-  // 개선 방식: 현재 카메라 시야(FOV) + 화면 비율 기준으로 "화면 안에 자연스럽게 들어오는 거리" 산정
-  
-  const fov = camera.fov * (Math.PI / 180) // FOV를 라디안으로 변환
-  const aspect = camera.aspect // 화면 비율 (width / height)
-  
-  // 바운딩 박스의 크기 (카메라 방향에 따른 투영 고려)
-  const horizontalSize = Math.max(size.x, size.z) // 수평면에서의 최대 크기
-  const verticalSize = size.y // 수직 크기
-  
-  // 바운딩 박스가 화면의 80% 정도를 차지하도록 거리 계산
+  // 🔥 개선: 화면 기준 거리 계산 (공통 함수 사용)
   const screenFillRatio = 0.8 // 화면의 80%를 차지
-  
-  // 수직 기준 거리 계산
-  const verticalDistance = (verticalSize / 2) / (Math.tan(fov / 2) * screenFillRatio)
-  
-  // 수평 기준 거리 계산
-  const horizontalDistance = (horizontalSize / 2) / (Math.tan(fov / 2) * aspect * screenFillRatio)
-  
-  // 더 큰 쪽을 기준으로 거리 결정 (모든 부분이 화면에 들어오도록)
-  const baseDistance = Math.max(verticalDistance, horizontalDistance)
-  
-  // 최소 거리 보장 (너무 가까이 가지 않도록)
-  const maxSize = Math.max(size.x, size.y, size.z)
-  const minDistance = maxSize * 0.5
-  const distance = Math.max(baseDistance, minDistance)
+  const distance = calculateScreenBasedDistance(camera, size, screenFillRatio)
   
   // 카메라 각도 (45도 isometric view)
   const angle = Math.PI / 4
   
-  // 높이 오프셋: 객체 위에서 약간 내려다보는 시점
-  const heightOffset = distance * 0.3
-  
-  const newCameraPosition = {
-    x: center.x + distance * Math.cos(angle),
-    y: center.y + heightOffset,
-    z: center.z + distance * Math.sin(angle),
-  }
+  // 카메라 위치 계산 (공통 함수 사용)
+  const newCameraPosition = calculateCameraPosition(center, distance, angle)
 
   debugLog(`[CameraFocus:ComponentFunc] 📐 부재 카메라 포커스 계산 (화면 기준)`, {
     componentId,
@@ -238,13 +217,8 @@ export function focusCameraToComponent(
       y: size.y.toFixed(1),
       z: size.z.toFixed(1),
     },
-    horizontalSize: horizontalSize.toFixed(1),
-    verticalSize: verticalSize.toFixed(1),
     cameraFov: camera.fov,
-    cameraAspect: aspect.toFixed(2),
-    verticalDistance: verticalDistance.toFixed(1),
-    horizontalDistance: horizontalDistance.toFixed(1),
-    baseDistance: baseDistance.toFixed(1),
+    cameraAspect: camera.aspect.toFixed(2),
     finalDistance: distance.toFixed(1),
     screenFillRatio,
     newPosition: {

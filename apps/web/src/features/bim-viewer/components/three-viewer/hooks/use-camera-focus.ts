@@ -374,7 +374,19 @@ export function useCameraFocus(options: UseCameraFocusOptions) {
     const duration = 1200 // 1.2초
     const startTime = performance.now()
     
+    let animationFrameId: number | null = null
+    let cancelled = false
+    
     const animate = (currentTime: number) => {
+      // 애니메이션이 취소되었거나 refs가 없으면 중단
+      if (cancelled || !cameraRef.current || !controlsRef.current) {
+        if (animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId)
+          animationFrameId = null
+        }
+        return
+      }
+      
       const elapsed = currentTime - startTime
       const progress = Math.min(elapsed / duration, 1)
       
@@ -384,19 +396,23 @@ export function useCameraFocus(options: UseCameraFocusOptions) {
         : 1 - Math.pow(-2 * progress + 2, 3) / 2
       
       // 카메라 위치 보간
-      cameraRef.current!.position.lerpVectors(startPosition, endPosition, ease)
+      cameraRef.current.position.lerpVectors(startPosition, endPosition, ease)
       
       // 타겟 보간
-      controlsRef.current!.target.lerpVectors(startTarget, center, ease)
-      controlsRef.current!.update()
+      controlsRef.current.target.lerpVectors(startTarget, center, ease)
+      controlsRef.current.update()
       
       if (progress < 1) {
-        requestAnimationFrame(animate)
+        animationFrameId = requestAnimationFrame(animate)
       } else {
         // 애니메이션 완료 후 정확한 위치로 설정
-        cameraRef.current!.position.copy(endPosition)
-        controlsRef.current!.target.copy(center)
-        controlsRef.current!.update()
+        if (cameraRef.current && controlsRef.current) {
+          cameraRef.current.position.copy(endPosition)
+          controlsRef.current.target.copy(center)
+          controlsRef.current.update()
+        }
+        
+        animationFrameId = null
         
         debugLog('[CameraFocus:Component] ✅ 애니메이션 완료', {
           selectedComponentId,
@@ -410,40 +426,34 @@ export function useCameraFocus(options: UseCameraFocusOptions) {
     }
     
     // 애니메이션 시작
-    requestAnimationFrame(animate)
-
+    animationFrameId = requestAnimationFrame(animate)
+    
     prevSelectedComponentIdRef.current = selectedComponentId
     
-    const newCameraPosition = {
-      x: cameraRef.current.position.x,
-      y: cameraRef.current.position.y,
-      z: cameraRef.current.position.z,
-    }
-    const newControlsTarget = {
-      x: controlsRef.current.target.x,
-      y: controlsRef.current.target.y,
-      z: controlsRef.current.target.z,
-    }
-
-    debugLog('[CameraFocus:Component] ✅ 부재 카메라 포커스 완료', {
+    // 애니메이션이 시작되었으므로 즉시 로그 출력 (애니메이션 완료는 animate 함수 내부에서 로그)
+    debugLog('[CameraFocus:Component] ✅ 부재 카메라 포커스 시작 (애니메이션)', {
       selectedComponentId,
-      componentName: mesh.userData.component?.name,
-      newCameraPosition: {
-        x: newCameraPosition.x.toFixed(2),
-        y: newCameraPosition.y.toFixed(2),
-        z: newCameraPosition.z.toFixed(2),
+      componentName: mesh?.userData.component?.name,
+      startPosition: {
+        x: startPosition.x.toFixed(2),
+        y: startPosition.y.toFixed(2),
+        z: startPosition.z.toFixed(2),
       },
-      newControlsTarget: {
-        x: newControlsTarget.x.toFixed(2),
-        y: newControlsTarget.y.toFixed(2),
-        z: newControlsTarget.z.toFixed(2),
-      },
-      cameraMoved: {
-        x: Math.abs(newCameraPosition.x - prevCameraPosition.x).toFixed(2),
-        y: Math.abs(newCameraPosition.y - prevCameraPosition.y).toFixed(2),
-        z: Math.abs(newCameraPosition.z - prevCameraPosition.z).toFixed(2),
+      endPosition: {
+        x: endPosition.x.toFixed(2),
+        y: endPosition.y.toFixed(2),
+        z: endPosition.z.toFixed(2),
       },
     })
+    
+    // Cleanup 함수: 애니메이션 취소
+    return () => {
+      cancelled = true
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId)
+        animationFrameId = null
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedComponentId, meshesReady]) // meshesRef, cameraRef, controlsRef는 ref이므로 의존성에서 제외
 }
