@@ -131,16 +131,32 @@ export const BIMViewer = memo(function BIMViewer({
   }, [model, selectedComponentId, onComponentSelect])
 
   // 디버깅: props 변경 추적 (개발 환경에서만)
-  debugLog('[BIMViewer] 렌더링:', {
-    bridgeId,
-    selectionState: { selectedComponentId },
-    selectedComponentName: selectedComponent?.name,
-    dataState: {
-      modelId: model?.metadata.id,
-      componentCount: model?.components.length,
-    },
-    hasOnComponentSelect: !!onComponentSelect,
-  })
+  // 🔥 수정: model이 있을 때만 상세 로그 출력, 없으면 간단한 로그만
+  if (model) {
+    debugLog('[BIMViewer] 렌더링:', {
+      bridgeId,
+      selectionState: { selectedComponentId },
+      selectedComponentName: selectedComponent?.name,
+      dataState: {
+        modelId: model.metadata.id,
+        componentCount: model.components.length,
+      },
+      hasOnComponentSelect: !!onComponentSelect,
+    })
+  } else if (loading) {
+    debugLog('[BIMViewer] 렌더링 (로딩 중):', {
+      bridgeId,
+      loading: true,
+      hasModel: false,
+    })
+  } else {
+    debugLog('[BIMViewer] 렌더링 (모델 없음):', {
+      bridgeId,
+      loading: false,
+      hasModel: false,
+      error: error?.message,
+    })
+  }
 
   if (loading) {
     return (

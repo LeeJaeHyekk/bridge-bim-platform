@@ -79,7 +79,7 @@ export const ThreeViewer = memo(function ThreeViewer({
   }, [selectedComponentId])
   
   // 🔥 ThreeEngine 사용 (새로운 구조)
-  const engine = useThreeEngine(containerRef, containerSize)
+  const { engine, isInitialized: engineInitialized } = useThreeEngine(containerRef, containerSize)
 
   // TODO: 점진적으로 제거 예정 - ModelManager로 이동
   const meshesRef = useRef<Map<string, THREE.Mesh>>(new Map())
@@ -137,6 +137,7 @@ export const ThreeViewer = memo(function ThreeViewer({
       hasControls: !!controlsRef.current,
       hasEngine: !!engine,
       engineInitialized: engine?.isInitialized() ?? false,
+      engineInitializedState: engineInitialized,
       meshCount: meshesRef.current.size,
       modelLoading: modelLoadingRef.current,
       loadingAbort: loadingAbortRef.current,
@@ -204,6 +205,7 @@ export const ThreeViewer = memo(function ThreeViewer({
       loadingAbort: loadingAbortRef.current,
       hasEngine: !!engine,
       engineInitialized: engine?.isInitialized() ?? false,
+      engineInitializedState: engineInitialized,
       hasScene: !!sceneRef.current,
       hasCamera: !!cameraRef.current,
       hasControls: !!controlsRef.current,
@@ -229,11 +231,18 @@ export const ThreeViewer = memo(function ThreeViewer({
   // 🔥 ThreeEngine은 useThreeEngine Hook 내부에서 자동 초기화됨
   // React는 "언제"만 결정하고, Engine이 "어떻게"를 수행
   // Engine의 refs를 React refs에 동기화 (기존 hooks 호환성 유지)
+  // 🔥 핵심 수정: engineInitialized 상태 변화에 즉시 반응하여 ref 동기화
+  // ref 동기화 완료를 추적하는 state 추가 (useModelLoader가 감지할 수 있도록)
+  const [refsReady, setRefsReady] = useState(false)
+  
   useEffect(() => {
-    if (engine && engine.isInitialized()) {
+    if (engine && engine.isInitialized() && engineInitialized) {
       sceneRef.current = engine.getScene()
       cameraRef.current = engine.getCamera()
       controlsRef.current = engine.getControls()
+      
+      // ref 동기화 완료 플래그 설정 (useModelLoader가 감지할 수 있도록)
+      setRefsReady(true)
       
       debugLog('[ThreeViewer:Progress] ✅ ThreeEngine 준비 완료', {
         hasEngine: !!engine,
@@ -241,9 +250,13 @@ export const ThreeViewer = memo(function ThreeViewer({
         hasCamera: !!cameraRef.current,
         hasControls: !!controlsRef.current,
         initialized: engine.isInitialized(),
+        engineInitialized,
+        refsReady: true,
       })
+    } else {
+      setRefsReady(false)
     }
-  }, [engine, containerSize.width, containerSize.height])
+  }, [engine, engineInitialized])
 
   // BIM 모델 로딩 및 렌더링 (Scene 초기화 후 실행)
   debugLog('[ThreeViewer:Progress] 🎬 useModelLoader 호출 시작', {
@@ -264,6 +277,7 @@ export const ThreeViewer = memo(function ThreeViewer({
     loadingAbortRef,
     meshesReadyRef,
     selectedComponentId: normalizedSelectedComponentId,
+    refsReady, // 🔥 추가: refs 동기화 완료 상태 전달
   })
   debugLog('[ThreeViewer:Progress] ✅ useModelLoader 호출 완료', {
     modelId,

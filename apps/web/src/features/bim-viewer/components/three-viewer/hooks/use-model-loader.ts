@@ -15,6 +15,7 @@ interface UseModelLoaderOptions {
   loadingAbortRef: React.MutableRefObject<boolean>
   meshesReadyRef: React.MutableRefObject<boolean>
   selectedComponentId?: string | null
+  refsReady?: boolean // 🔥 추가: refs 동기화 완료 상태
 }
 
 export function useModelLoader(options: UseModelLoaderOptions) {
@@ -28,9 +29,11 @@ export function useModelLoader(options: UseModelLoaderOptions) {
     loadingAbortRef,
     meshesReadyRef,
     selectedComponentId,
+    refsReady = false, // 🔥 추가: refs 동기화 완료 상태 (기본값 false)
   } = options
 
   useEffect(() => {
+    // 🔥 핵심 수정: refs가 준비되지 않았으면 스킵 (하지만 의존성 배열에 포함하여 refs가 준비되면 재실행)
     if (!model || !sceneRef.current || !cameraRef.current || !controlsRef.current) {
       debugLog('[ThreeViewer] 모델 로딩 스킵: 필수 참조가 없음', {
         hasModel: !!model,
@@ -296,5 +299,10 @@ export function useModelLoader(options: UseModelLoaderOptions) {
         })
       }
     }
-  }, [model?.metadata.id, selectedComponentId])
+  }, [
+    model?.metadata.id, 
+    selectedComponentId,
+    // 🔥 핵심 수정: refsReady 상태를 의존성에 추가하여 refs가 동기화되면 재실행
+    refsReady,
+  ])
 }
