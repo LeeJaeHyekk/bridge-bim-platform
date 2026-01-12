@@ -89,31 +89,50 @@ export function useHighlight(options: UseHighlightOptions) {
 
       if (mesh.material instanceof THREE.MeshStandardMaterial) {
         if (isSelected) {
-          // 선택된 부재: 하이라이트 적용
+          // 🔥 개선: 선택된 부재 - 더 직관적이고 명확한 하이라이트
           selectedMeshFound = true
-          const originalEmissive = mesh.userData.originalEmissive || 0x666666
-          const originalColor = mesh.userData.originalColor || 0x3b82f6
           
           debugLog('[ThreeViewer] 부재 선택 - 하이라이트 적용:', {
             componentId,
             componentName: mesh.userData.component?.name,
-            originalColor: `0x${originalColor.toString(16)}`,
-            originalEmissive: `0x${originalEmissive.toString(16)}`,
+            originalColor: `0x${mesh.userData.originalColor?.toString(16)}`,
           })
 
-          mesh.material.emissive.setHex(originalEmissive)
-          mesh.material.emissiveIntensity = 0.8
-          mesh.material.color.setHex(originalColor)
-          mesh.material.color.multiplyScalar(1.3)
+          // 🔥 직관적인 하이라이트: 밝은 흰색/노란색으로 변경하여 명확하게 구분
+          // 선택된 부재는 상태 색상과 무관하게 밝은 색상으로 표시
+          const highlightColor = 0xffffff // 밝은 흰색
+          const highlightEmissive = 0xffd700 // 금색 (노란색 계열)
+          
+          mesh.material.color.setHex(highlightColor)
+          mesh.material.emissive.setHex(highlightEmissive)
+          mesh.material.emissiveIntensity = 1.5 // 매우 밝게 빛나는 효과
+          
+          // 반짝이는 효과를 위한 재질 속성
+          mesh.material.metalness = 0.5
+          mesh.material.roughness = 0.2
+          
+          // 🔥 중요: material 업데이트 플래그 설정
+          mesh.material.needsUpdate = true
         } else {
-          // 선택되지 않은 부재: 원본 색상으로 복원 (전체 보기 모드)
+          // 🔥 개선: 선택되지 않은 부재 - 어둡게 처리하여 선택된 부재가 더 돋보이게
           const originalColor = mesh.userData.originalColor || 0x3b82f6
           const originalEmissive = mesh.userData.originalEmissive || 0x1e3a8a
           const originalEmissiveIntensity = mesh.userData.originalEmissiveIntensity || 0.2
           
-          mesh.material.color.setHex(originalColor)
+          // 선택되지 않은 부재는 어둡게 (opacity는 유지하되 색상을 어둡게)
+          const darkenedColor = new THREE.Color(originalColor)
+          darkenedColor.multiplyScalar(0.4) // 40% 밝기로 어둡게
+          
+          mesh.material.color.copy(darkenedColor)
           mesh.material.emissive.setHex(originalEmissive)
-          mesh.material.emissiveIntensity = originalEmissiveIntensity
+          mesh.material.emissiveIntensity = originalEmissiveIntensity * 0.3 // emissive도 어둡게
+          
+          // 원본 재질 속성 복원
+          mesh.material.metalness = 0.2
+          mesh.material.roughness = 0.5
+          
+          // 🔥 중요: material 업데이트 플래그 설정
+          mesh.material.needsUpdate = true
         }
       } else {
         console.warn('[ThreeViewer] MeshStandardMaterial이 아닌 부재:', {

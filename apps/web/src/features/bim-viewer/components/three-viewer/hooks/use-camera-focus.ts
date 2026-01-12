@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import type { BIMModel } from '@bridge-bim-platform/shared'
 import { debugLog } from '../utils/debug'
-import { focusCameraToScene, focusCameraToComponent } from '../utils/camera-focus'
+import { focusCameraToScene } from '../utils/camera-focus'
 
 interface UseCameraFocusOptions {
   // dataState
@@ -293,12 +293,124 @@ export function useCameraFocus(options: UseCameraFocusOptions) {
       },
     })
 
-    focusCameraToComponent(
-      cameraRef.current,
-      controlsRef.current,
-      mesh,
-      mesh.userData.component?.name,
+    // 🔥 개선: 부드러운 애니메이션을 위한 초기 위치 저장
+    const startPosition = cameraRef.current.position.clone()
+    const startTarget = controlsRef.current.target.clone()
+    
+    // 목표 위치 계산 (화면 기준 거리 계산)
+    const box = new THREE.Box3().setFromObject(mesh)
+    const center = new THREE.Vector3()
+    box.getCenter(center)
+    const size = new THREE.Vector3()
+    box.getSize(size)
+    
+    // 🔥 개선: 화면 기준 거리 계산 (FOV + 화면 비율 고려)
+    // 기존 방식: 객체의 절대 크기(maxSize) 기준 → 수평으로 긴 객체에서 과도하게 멀어짐
+    // 개선 방식: 현재 카메라 시야(FOV) + 화면 비율 기준으로 "화면 안에 자연스럽게 들어오는 거리" 산정
+    
+    const camera = cameraRef.current!
+    const fov = camera.fov * (Math.PI / 180) // FOV를 라디안으로 변환 (기본값: 75도)
+    const aspect = camera.aspect // 화면 비율 (width / height)
+    
+    // 바운딩 박스의 크기 (카메라 방향에 따른 투영 고려)
+    // 카메라가 45도 각도에서 보므로, 수평/수직 크기를 모두 고려
+    const horizontalSize = Math.max(size.x, size.z) // 수평면에서의 최대 크기
+    const verticalSize = size.y // 수직 크기
+    
+    // 화면에서 보이는 범위 계산 (world units)
+    // 수직 시야 높이 = 2 * distance * tan(FOV / 2)
+    // 수평 시야 너비 = 수직 시야 높이 * aspect
+    
+    // 바운딩 박스가 화면의 80% 정도를 차지하도록 거리 계산
+    // 화면 비율을 고려하여 수평/수직 중 더 큰 쪽을 기준으로 함
+    const screenFillRatio = 0.8 // 화면의 80%를 차지
+    
+    // 수직 기준 거리 계산
+    const verticalDistance = (verticalSize / 2) / (Math.tan(fov / 2) * screenFillRatio)
+    
+    // 수평 기준 거리 계산
+    const horizontalDistance = (horizontalSize / 2) / (Math.tan(fov / 2) * aspect * screenFillRatio)
+    
+    // 더 큰 쪽을 기준으로 거리 결정 (모든 부분이 화면에 들어오도록)
+    const baseDistance = Math.max(verticalDistance, horizontalDistance)
+    
+    // 최소 거리 보장 (너무 가까이 가지 않도록)
+    const minDistance = Math.max(size.x, size.y, size.z) * 0.5
+    const distance = Math.max(baseDistance, minDistance)
+    
+    // 카메라 각도 (45도 isometric view)
+    const angle = Math.PI / 4
+    
+    // 높이 오프셋: 객체 위에서 약간 내려다보는 시점
+    // 거리에 비례하여 조정 (거리가 멀수록 높이 오프셋도 증가)
+    const heightOffset = distance * 0.3
+    
+    const endPosition = new THREE.Vector3(
+      center.x + distance * Math.cos(angle),
+      center.y + heightOffset,
+      center.z + distance * Math.sin(angle),
     )
+    
+    debugLog('[CameraFocus:Component] 📐 화면 기준 거리 계산', {
+      selectedComponentId,
+      componentName: mesh.userData.component?.name,
+      boundingBoxSize: {
+        x: size.x.toFixed(2),
+        y: size.y.toFixed(2),
+        z: size.z.toFixed(2),
+      },
+      horizontalSize: horizontalSize.toFixed(2),
+      verticalSize: verticalSize.toFixed(2),
+      cameraFov: camera.fov,
+      cameraAspect: aspect.toFixed(2),
+      verticalDistance: verticalDistance.toFixed(2),
+      horizontalDistance: horizontalDistance.toFixed(2),
+      baseDistance: baseDistance.toFixed(2),
+      finalDistance: distance.toFixed(2),
+      screenFillRatio,
+    })
+    
+    // 🔥 개선: 부드러운 애니메이션 적용 (ease-in-out)
+    const duration = 1200 // 1.2초
+    const startTime = performance.now()
+    
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      
+      // Easing 함수 (ease-in-out cubic)
+      const ease = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2
+      
+      // 카메라 위치 보간
+      cameraRef.current!.position.lerpVectors(startPosition, endPosition, ease)
+      
+      // 타겟 보간
+      controlsRef.current!.target.lerpVectors(startTarget, center, ease)
+      controlsRef.current!.update()
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      } else {
+        // 애니메이션 완료 후 정확한 위치로 설정
+        cameraRef.current!.position.copy(endPosition)
+        controlsRef.current!.target.copy(center)
+        controlsRef.current!.update()
+        
+        debugLog('[CameraFocus:Component] ✅ 애니메이션 완료', {
+          selectedComponentId,
+          finalPosition: {
+            x: endPosition.x.toFixed(2),
+            y: endPosition.y.toFixed(2),
+            z: endPosition.z.toFixed(2),
+          },
+        })
+      }
+    }
+    
+    // 애니메이션 시작
+    requestAnimationFrame(animate)
 
     prevSelectedComponentIdRef.current = selectedComponentId
     
