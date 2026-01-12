@@ -1,0 +1,144 @@
+/* 교량 카드 스타일 */
+
+.card {
+  background-color: var(--color-bg-primary);
+  border: 2px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  transition: var(--transition-default);
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  position: relative;
+  isolation: isolate;
+}
+
+@media (min-width: 640px) {
+  .card {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card {
+    padding: 1.75rem;
+  }
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-border-hover);
+  transform: translateY(-2px);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .header {
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+  }
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  flex: 1;
+  line-height: 1.3;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .title {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 1.375rem;
+  }
+}
+
+.statusBadge {
+  padding: 0.5rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-width: 2px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .statusBadge {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+.statusSafe {
+  background-color: var(--color-safe-bg);
+  color: var(--color-safe-text);
+  border-color: var(--color-safe-border);
+}
+
+.statusWarning {
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning-text);
+  border-color: var(--color-warning-border);
+}
+
+.statusDanger {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger-text);
+  border-color: var(--color-danger-border);
+}
+
+.footer {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border-light);
+}
+
+@media (min-width: 640px) {
+  .footer {
+    padding-top: 1.5rem;
+  }
+}
+
+.location {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  font-weight: var(--font-weight-medium);
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .location {
+    font-size: 1rem;
+  }
+}
+
+.locationIcon {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+@media (min-width: 640px) {
+  .locationIcon {
+    font-size: 1.125rem;
+  }
+}

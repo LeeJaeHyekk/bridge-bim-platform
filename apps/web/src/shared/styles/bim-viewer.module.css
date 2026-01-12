@@ -1,0 +1,131 @@
+/* BIM Viewer 스타일 - CSS 변수 사용 */
+
+.viewer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-primary);
+}
+
+.header {
+  padding: var(--spacing-lg);
+  border-bottom-width: 2px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-secondary);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  font-weight: var(--font-weight-medium);
+}
+
+.metaIcon {
+  margin-right: var(--spacing-xs);
+  font-size: var(--font-size-lg);
+}
+
+.viewport {
+  flex: 1;
+  background-color: var(--color-bg-dark);
+  position: relative;
+  min-height: 0;
+}
+
+.componentList {
+  padding: var(--spacing-lg);
+  border-top-width: 2px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-primary);
+  max-height: 14rem;
+  overflow-y: auto;
+}
+
+.componentListTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  align-items: center;
+}
+
+.componentListIcon {
+  margin-right: var(--spacing-xs);
+  font-size: var(--font-size-xl);
+}
+
+.componentItem {
+  width: 100%;
+  text-align: left;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  transition: var(--transition-default);
+  margin-bottom: var(--spacing-sm);
+}
+
+.componentItemDefault {
+  background-color: var(--color-bg-secondary);
+  border: 2px solid var(--color-border-default);
+}
+
+.componentItemDefault:hover {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-border-hover);
+}
+
+.componentItemSelected {
+  background-color: var(--color-primary-light);
+  border: 2px solid #3b82f6;
+  box-shadow: var(--shadow-sm);
+}
+
+.componentItemContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.componentName {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+}
+
+.componentStatus {
+  padding: 0.375rem var(--spacing-sm);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.componentStatusSafe {
+  background-color: var(--color-safe-bg);
+  color: var(--color-safe-text);
+}
+
+.componentStatusWarning {
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.componentStatusDanger {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger-text);
+}

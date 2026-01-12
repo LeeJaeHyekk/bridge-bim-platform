@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { bridgeService } from './bridge.service'
 
 export const bridgeController = {
-  async getAll(req: Request, res: Response, next: NextFunction) {
+  async getAll(_req: Request, res: Response, next: NextFunction) {
     try {
       const bridges = await bridgeService.findAll()
       res.json(bridges)

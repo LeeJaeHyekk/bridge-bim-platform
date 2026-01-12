@@ -1,0 +1,544 @@
+/* Dashboard 페이지 스타일 - CSS 변수 사용 */
+
+.container {
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+  padding: var(--spacing-md);
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: var(--spacing-lg);
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: var(--spacing-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    padding: var(--spacing-3xl);
+  }
+}
+
+.maxWidth {
+  max-width: var(--max-width-container);
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  position: relative;
+}
+
+/* 섹션 구분선 */
+.sectionDivider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-border-default), transparent);
+  margin: var(--spacing-3xl) 0;
+  border: none;
+}
+
+@media (min-width: 768px) {
+  .sectionDivider {
+    margin: var(--spacing-4xl) 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sectionDivider {
+    margin: var(--spacing-5xl) 0;
+  }
+}
+
+.header {
+  margin-bottom: var(--spacing-3xl);
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 2px solid var(--color-border-light);
+}
+
+@media (min-width: 768px) {
+  .header {
+    margin-bottom: var(--spacing-4xl);
+    padding-bottom: var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .header {
+    margin-bottom: var(--spacing-5xl);
+    padding-bottom: var(--spacing-3xl);
+  }
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+  .title {
+    font-size: var(--font-size-4xl);
+  }
+}
+
+.subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xl);
+  line-height: 1.75;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-4xl);
+  width: 100%;
+  position: relative;
+  isolation: isolate;
+}
+
+@media (min-width: 640px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-2xl);
+    margin-top: var(--spacing-2xl);
+    margin-bottom: var(--spacing-5xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .statsGrid {
+    gap: var(--spacing-3xl);
+    margin-top: var(--spacing-3xl);
+    margin-bottom: var(--spacing-5xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--spacing-2xl);
+    margin-top: var(--spacing-3xl);
+    margin-bottom: var(--spacing-5xl);
+  }
+}
+
+@media (min-width: 1280px) {
+  .statsGrid {
+    gap: var(--spacing-3xl);
+    margin-top: 3.5rem;
+    margin-bottom: 6rem;
+  }
+}
+
+.statCard {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-lg);
+  border-left-width: 4px;
+  transition: var(--transition-shadow);
+  margin: 0;
+  width: 100%;
+  position: relative;
+  isolation: isolate;
+}
+
+@media (min-width: 640px) {
+  .statCard {
+    padding: var(--spacing-xl);
+  }
+}
+
+.statCard:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.statCardBlue {
+  border-left-color: var(--color-primary);
+}
+
+.statCardGreen {
+  border-left-color: var(--color-safe-primary);
+}
+
+.statCardYellow {
+  border-left-color: var(--color-warning-primary);
+}
+
+.statCardRed {
+  border-left-color: var(--color-danger-primary);
+}
+
+.statContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.statInfo {
+  flex: 1;
+}
+
+.statLabel {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.statValue {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+@media (min-width: 640px) {
+  .statValue {
+    font-size: var(--font-size-4xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .statValue {
+    font-size: var(--font-size-5xl);
+  }
+}
+
+.statValueBlue {
+  color: var(--color-text-primary);
+}
+
+.statValueGreen {
+  color: var(--color-success);
+}
+
+.statValueYellow {
+  color: #a16207;
+}
+
+.statValueRed {
+  color: #b91c1c;
+}
+
+.statIcon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-2xl);
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .statIcon {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.875rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .statIcon {
+    width: 4.5rem;
+    height: 4.5rem;
+    font-size: 2rem;
+  }
+}
+
+.statIconBlue {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.statIconGreen {
+  background-color: var(--color-safe-bg);
+  color: var(--color-safe-primary);
+}
+
+.statIconYellow {
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning-primary);
+}
+
+.statIconRed {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger-primary);
+}
+
+.bridgeListCard {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  margin-top: var(--spacing-3xl);
+  margin-bottom: var(--spacing-4xl);
+  overflow: visible;
+  border: 1px solid var(--color-border-default);
+  width: 100%;
+  position: relative;
+  isolation: isolate;
+  clear: both;
+}
+
+@media (min-width: 768px) {
+  .bridgeListCard {
+    margin-top: var(--spacing-4xl);
+    margin-bottom: var(--spacing-5xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .bridgeListCard {
+    margin-top: var(--spacing-5xl);
+    margin-bottom: 6rem;
+  }
+}
+
+.sectionHeader {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-default);
+  background-color: var(--color-bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+@media (min-width: 640px) {
+  .sectionHeader {
+    padding: var(--spacing-xl);
+    flex-wrap: nowrap;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sectionHeader {
+    padding: var(--spacing-2xl);
+  }
+}
+
+.sectionTitle {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.sectionSubtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-text-tertiary);
+}
+
+.sectionLink {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  transition: var(--transition-color);
+}
+
+.sectionLink:hover {
+  color: var(--color-primary-hover);
+}
+
+.sectionContent {
+  padding: var(--spacing-lg);
+}
+
+@media (min-width: 640px) {
+  .sectionContent {
+    padding: var(--spacing-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .sectionContent {
+    padding: var(--spacing-2xl);
+  }
+}
+
+.bridgeGrid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: var(--spacing-xl);
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .bridgeGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 768px) {
+  .bridgeGrid {
+    gap: var(--spacing-3xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .bridgeGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 1280px) {
+  .bridgeGrid {
+    gap: var(--spacing-3xl);
+  }
+}
+
+/* 교량 카드 링크 스타일 */
+.bridgeCardLink {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  isolation: isolate;
+}
+
+.bridgeCardLink:hover {
+  transform: translateY(-2px);
+}
+
+.bridgeCardLink:active {
+  transform: translateY(0);
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--spacing-5xl) 0;
+}
+
+.emptyStateIcon {
+  font-size: 4.5rem;
+  margin-bottom: var(--spacing-lg);
+}
+
+.emptyStateTitle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-xs);
+}
+
+.emptyStateSubtitle {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+}
+
+.actionCard {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border-default);
+  width: 100%;
+  margin-top: var(--spacing-3xl);
+  position: relative;
+  isolation: isolate;
+  clear: both;
+}
+
+@media (min-width: 768px) {
+  .actionCard {
+    margin-top: var(--spacing-4xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .actionCard {
+    margin-top: var(--spacing-5xl);
+  }
+}
+
+@media (min-width: 640px) {
+  .actionCard {
+    padding: var(--spacing-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .actionCard {
+    padding: var(--spacing-2xl);
+  }
+}
+
+.actionTitle {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .actionButtons {
+    gap: var(--spacing-lg);
+  }
+}
+
+@media (min-width: 768px) {
+  .actionButtons {
+    gap: var(--spacing-xl);
+  }
+}
+
+.actionButton {
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+  transition: var(--transition-default);
+  box-shadow: var(--shadow-md);
+  color: white;
+}
+
+.actionButton:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.actionButtonPrimary {
+  background-color: var(--color-primary);
+}
+
+.actionButtonPrimary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.actionButtonSuccess {
+  background-color: var(--color-success);
+}
+
+.actionButtonSuccess:hover {
+  background-color: var(--color-success-hover);
+}

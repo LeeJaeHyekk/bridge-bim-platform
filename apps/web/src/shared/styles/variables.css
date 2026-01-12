@@ -1,0 +1,105 @@
+/* CSS 변수 정의 - 전역 스타일 토큰 */
+
+:root {
+  /* 브레이크포인트 */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  /* 색상 - 텍스트 */
+  --color-text-primary: #111827;
+  --color-text-secondary: #374151;
+  --color-text-tertiary: #4b5563;
+  --color-text-muted: #6b7280;
+  --color-text-disabled: #9ca3af;
+
+  /* 색상 - 배경 */
+  --color-bg-primary: white;
+  --color-bg-secondary: #f9fafb;
+  --color-bg-tertiary: #f3f4f6;
+  --color-bg-dark: #111827;
+
+  /* 색상 - 테두리 */
+  --color-border-default: #e5e7eb;
+  --color-border-hover: #d1d5db;
+  --color-border-light: #f3f4f6;
+
+  /* 색상 - 상태 (Safe) */
+  --color-safe-bg: #dcfce7;
+  --color-safe-text: #166534;
+  --color-safe-border: #86efac;
+  --color-safe-primary: #16a34a;
+
+  /* 색상 - 상태 (Warning) */
+  --color-warning-bg: #fef9c3;
+  --color-warning-text: #854d0e;
+  --color-warning-border: #fde047;
+  --color-warning-primary: #ca8a04;
+
+  /* 색상 - 상태 (Danger) */
+  --color-danger-bg: #fee2e2;
+  --color-danger-text: #991b1b;
+  --color-danger-border: #fca5a5;
+  --color-danger-primary: #dc2626;
+
+  /* 색상 - Primary (Blue) */
+  --color-primary: #1d4ed8;
+  --color-primary-hover: #1e40af;
+  --color-primary-light: #dbeafe;
+  --color-primary-border: #93c5fd;
+
+  /* 색상 - Success (Green) */
+  --color-success: #15803d;
+  --color-success-hover: #166534;
+
+  /* 간격 */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 2.5rem;
+  --spacing-3xl: 3rem;
+  --spacing-4xl: 4rem;
+  --spacing-5xl: 5rem;
+
+  /* 폰트 크기 */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2.5rem;
+  --font-size-4xl: 3rem;
+  --font-size-5xl: 3.5rem;
+
+  /* 폰트 두께 */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* 테두리 반경 */
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-full: 9999px;
+
+  /* 그림자 */
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* 전환 */
+  --transition-default: all 0.3s ease;
+  --transition-color: color 0.3s ease;
+  --transition-shadow: box-shadow 0.3s ease;
+
+  /* 최대 너비 */
+  --max-width-container: 80rem;
+
+  /* 레이아웃 */
+  --nav-height: 5rem;
+}

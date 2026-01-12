@@ -1,0 +1,9 @@
+/* 전역 스타일 - CSS 변수 및 기본 설정 */
+
+@import './variables.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

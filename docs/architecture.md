@@ -24,11 +24,34 @@
 
 ```
 src/
-├─ app/              # 앱 초기 설정 (라우터, 프로바이더)
-├─ pages/            # 라우트 단위 페이지
-├─ features/         # 기능 단위 (교량 조회, BIM 뷰어)
-├─ entities/         # 핵심 도메인 모델
-└─ shared/           # 공통 UI, 유틸
+├─ app/                    # 앱 초기 설정
+│  ├─ layout.tsx          # 공통 레이아웃 (네비게이션 포함)
+│  ├─ router.tsx           # 라우트 정의
+│  └─ providers.tsx        # 프로바이더 (RouterProvider)
+│
+├─ pages/                  # 라우트 단위 페이지
+│  ├─ dashboard/           # 대시보드 페이지
+│  ├─ bridge-list/         # 교량 목록 페이지
+│  └─ bridge-detail/       # 교량 상세 페이지
+│
+├─ features/               # 기능 단위
+│  ├─ bridge/              # 교량 관련 기능
+│  │  ├─ api.ts           # API 호출 함수
+│  │  ├─ hooks.ts         # React Hooks (useBridges)
+│  │  └─ components/      # BridgeCard 등
+│  └─ bim-viewer/         # BIM 뷰어 기능
+│     ├─ api.ts           # BIM API 호출
+│     ├─ hooks.ts         # BIM 관련 Hooks
+│     └─ components/      # BIMViewer, ThreeViewer 등
+│
+├─ entities/               # 핵심 도메인 모델
+│  └─ bridge/              # 교량 엔티티
+│
+└─ shared/                 # 공통 리소스
+   ├─ ui/                  # 공통 UI 컴포넌트 (Navigation, Loading, Error)
+   ├─ styles/              # CSS Modules 및 전역 스타일
+   ├─ constants/           # 상수
+   └─ lib/                 # 유틸리티 함수
 ```
 
 **왜 이렇게 나누는가?**
@@ -48,13 +71,26 @@ src/
 ```
 src/
 ├─ modules/
-│  └─ bridge/
-│     ├─ bridge.controller.ts    # HTTP 요청/응답
-│     ├─ bridge.service.ts        # 비즈니스 로직
-│     ├─ bridge.repository.ts     # 데이터 접근
-│     └─ bridge.route.ts          # URL 정의
+│  ├─ bridge/                     # 교량 모듈
+│  │  ├─ bridge.controller.ts    # HTTP 요청/응답
+│  │  ├─ bridge.service.ts        # 비즈니스 로직
+│  │  ├─ bridge.repository.ts     # 데이터 접근 (Mock)
+│  │  └─ bridge.route.ts          # URL 정의
+│  └─ bim/                        # BIM 모듈
+│     ├─ bim.controller.ts        # HTTP 요청/응답
+│     ├─ bim.service.ts           # 비즈니스 로직
+│     ├─ bim.repository.ts        # 데이터 접근 (Mock)
+│     └─ bim.route.ts             # URL 정의
+│
 ├─ common/                        # 공통 미들웨어, 에러 처리
-└─ config/                        # 환경 설정
+│  └─ error/
+│     └─ error-handler.ts        # 전역 에러 핸들러
+│
+├─ config/                        # 환경 설정
+│  └─ env.ts                     # 환경 변수
+│
+├─ app.ts                         # Express 앱 설정
+└─ server.ts                      # 서버 시작점
 ```
 
 **역할 분리 이유:**
@@ -106,13 +142,18 @@ features/
       └─ components/
 ```
 
-### 2. 3D BIM 뷰어 연동
+### 2. 3D BIM 뷰어 연동 (✅ 구현 완료)
 
 ```
 features/
   └─ bim-viewer/
-      ├─ viewer.tsx        # Three.js 또는 Forge Viewer
-      └─ controls.tsx
+      ├─ components/
+      │  ├─ bim-viewer.tsx        # 메인 BIM 뷰어 컴포넌트
+      │  ├─ three-viewer.tsx      # Three.js 3D 렌더링
+      │  ├─ bim-filter.tsx        # 필터 컴포넌트
+      │  └─ bim-properties.tsx    # 속성 표시 컴포넌트
+      ├─ api.ts                   # BIM API 호출
+      └─ hooks.ts                 # BIM 데이터 Hooks
 ```
 
 ### 3. DB 연동

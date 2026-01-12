@@ -1,0 +1,202 @@
+/* BIM Properties 스타일 - CSS 변수 사용 */
+
+.properties {
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--color-bg-primary);
+}
+
+.content {
+  padding: var(--spacing-lg);
+}
+
+@media (min-width: 640px) {
+  .content {
+    padding: var(--spacing-xl);
+  }
+}
+
+.emptyState {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  background-color: var(--color-bg-secondary);
+}
+
+.emptyStateContent {
+  text-align: center;
+}
+
+.emptyStateIcon {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-lg);
+}
+
+.emptyStateTitle {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-xs);
+}
+
+.emptyStateSubtitle {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-base);
+}
+
+.header {
+  border-bottom-width: 2px;
+  border-color: var(--color-border-default);
+  padding-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.componentName {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.2;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.badge {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  border-width: 2px;
+}
+
+.badgeType {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-hover);
+  border-color: var(--color-primary-border);
+}
+
+.badgeSafe {
+  background-color: var(--color-safe-bg);
+  color: var(--color-safe-text);
+  border-color: var(--color-safe-border);
+}
+
+.badgeWarning {
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning-text);
+  border-color: var(--color-warning-border);
+}
+
+.badgeDanger {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger-text);
+  border-color: var(--color-danger-border);
+}
+
+.section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  align-items: center;
+}
+
+.sectionIcon {
+  margin-right: var(--spacing-xs);
+  font-size: var(--font-size-xl);
+}
+
+.propertyList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.propertyItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-border-default);
+  transition: var(--transition-default);
+}
+
+.propertyItem:hover {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-border-hover);
+}
+
+.propertyKey {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.propertyValue {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.propertyUnit {
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-normal);
+  margin-left: var(--spacing-xs);
+}
+
+.relationshipCard {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  border-width: 2px;
+  margin-bottom: var(--spacing-md);
+}
+
+.relationshipCardParent {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.relationshipCardChildren {
+  background-color: #faf5ff;
+  border-color: #e9d5ff;
+}
+
+.relationshipLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-xs);
+}
+
+.relationshipLabelParent {
+  color: var(--color-primary-hover);
+}
+
+.relationshipLabelChildren {
+  color: #7c3aed;
+}
+
+.relationshipId {
+  font-size: var(--font-size-base);
+  font-family: monospace;
+  font-weight: var(--font-weight-semibold);
+  color: #1f2937;
+}
+
+.relationshipList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}

@@ -1,0 +1,92 @@
+/* Navigation 스타일 - CSS 변수 사용 */
+
+.nav {
+  background-color: var(--color-bg-primary);
+  border-bottom-width: 2px;
+  border-color: var(--color-border-default);
+  box-shadow: var(--shadow-sm);
+}
+
+.container {
+  max-width: var(--max-width-container);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+  }
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  height: var(--nav-height);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-sm);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  transition: var(--transition-color);
+}
+
+.logo:hover {
+  color: var(--color-primary-hover);
+}
+
+.menu {
+  display: none;
+  margin-left: var(--spacing-xl);
+  gap: var(--spacing-lg);
+}
+
+@media (min-width: 640px) {
+  .menu {
+    display: flex;
+  }
+}
+
+.menuItem {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-sm);
+  border-bottom-width: 3px;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  transition: var(--transition-default);
+}
+
+.menuItemActive {
+  border-bottom-color: var(--color-primary);
+  color: var(--color-text-primary);
+}
+
+.menuItemInactive {
+  border-bottom-color: transparent;
+  color: var(--color-text-tertiary);
+}
+
+.menuItemInactive:hover {
+  color: var(--color-text-primary);
+  border-bottom-color: var(--color-border-hover);
+}
